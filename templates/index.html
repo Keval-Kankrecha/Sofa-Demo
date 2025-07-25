@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sofa Recolor Tool</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f4f4f4;
+      padding: 40px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #333;
+      margin-bottom: 30px;
+    }
+
+    form {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+      display: inline-block;
+      max-width: 420px;
+      width: 100%;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: 600;
+      color: #444;
+      margin-bottom: 10px;
+    }
+
+    input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    .color-options {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .color-option {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .color-option input[type="radio"] {
+      display: none;
+    }
+
+    .color-swatch {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      cursor: pointer;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .color-option input[type="radio"]:checked + .color-swatch {
+      border-color: #000;
+      transform: scale(1.1);
+    }
+
+    #output {
+      margin-top: 30px;
+    }
+
+    #preview {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+      display: none;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Sofa Recolor Tool</h2>
+  <form id="recolorForm" enctype="multipart/form-data">
+    <label>Select Sofa Image:</label>
+    <input type="file" name="image" id="imageInput" accept="image/*" required />
+
+    <label>Select Target Color:</label>
+    <div class="color-options" id="colorOptions">
+      <!-- Color Swatches -->
+      <label class="color-option">
+        <input type="radio" name="color" value="255,0,0" />
+        <span class="color-swatch" style="background-color: rgb(255,0,0);"></span>
+      </label>
+      <label class="color-option">
+        <input type="radio" name="color" value="0,128,255" />
+        <span class="color-swatch" style="background-color: rgb(0,128,255);"></span>
+      </label>
+      <label class="color-option">
+        <input type="radio" name="color" value="34,139,34" />
+        <span class="color-swatch" style="background-color: rgb(34,139,34);"></span>
+      </label>
+      <label class="color-option">
+        <input type="radio" name="color" value="255,165,0" />
+        <span class="color-swatch" style="background-color: rgb(255,165,0);"></span>
+      </label>
+      <label class="color-option">
+        <input type="radio" name="color" value="128,0,128" />
+        <span class="color-swatch" style="background-color: rgb(128,0,128);"></span>
+      </label>
+      <label class="color-option">
+        <input type="radio" name="color" value="255,192,203" />
+        <span class="color-swatch" style="background-color: rgb(255,192,203);"></span>
+      </label>
+      <label class="color-option">
+        <input type="radio" name="color" value="0,255,255" />
+        <span class="color-swatch" style="background-color: rgb(0,255,255);"></span>
+      </label>
+      <label class="color-option">
+        <input type="radio" name="color" value="255,255,0" />
+        <span class="color-swatch" style="background-color: rgb(255,255,0);"></span>
+      </label>
+      <label class="color-option">
+        <input type="radio" name="color" value="105,105,105" />
+        <span class="color-swatch" style="background-color: rgb(105,105,105);"></span>
+      </label>
+      <label class="color-option">
+        <input type="radio" name="color" value="0,0,128" />
+        <span class="color-swatch" style="background-color: rgb(0,0,128);"></span>
+      </label>
+    </div>
+  </form>
+
+  <div id="output">
+    <p><strong>Preview:</strong></p>
+    <img id="preview" src="" alt="Recolored Sofa" />
+  </div>
+
+  <script>
+    const preview = document.getElementById('preview');
+    const imageInput = document.getElementById('imageInput');
+    const colorInputs = document.querySelectorAll('input[name="color"]');
+
+    colorInputs.forEach(input => {
+      input.addEventListener('change', async () => {
+        const file = imageInput.files[0];
+        const color = input.value;
+
+        if (!file) {
+          alert("Please upload a sofa image first.");
+          input.checked = false;
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append('image', file);
+        formData.append('color', color);
+
+        try {
+          const response = await fetch('/recolor', {
+            method: 'POST',
+            body: formData
+          });
+
+          if (!response.ok) {
+            throw new Error("Failed to recolor sofa.");
+          }
+
+          const blob = await response.blob();
+          const url = URL.createObjectURL(blob);
+          preview.src = url;
+          preview.style.display = 'block';
+        } catch (err) {
+          console.error(err);
+          alert("Error recoloring sofa.");
+        }
+      });
+    });
+  </script>
+</body>
+</html>
