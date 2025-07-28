@@ -10,18 +10,17 @@ import os
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
-@app.route('/')
-def home():
-    return render_template('index.html')  # Serve HTML UI
 
 def load_image_from_bytes(file_bytes):
     image = Image.open(io.BytesIO(file_bytes)).convert("RGBA")
     return np.array(image)
 
+
 def isolate_sofa(image_np):
     pil_image = Image.fromarray(image_np)
     output = remove(pil_image)
     return np.array(output)
+
 
 def apply_color_cv(image_np, target_rgb):
     # Normalize image and target color
@@ -43,12 +42,14 @@ def apply_color_cv(image_np, target_rgb):
     recolored = (recolored * 255).astype(np.uint8)
     return recolored
 
+
 def image_to_bytes(image_np):
     pil_img = Image.fromarray(image_np)
     byte_io = io.BytesIO()
     pil_img.save(byte_io, format='PNG')
     byte_io.seek(0)
     return byte_io
+
 
 @app.route('/recolor', methods=['POST'])
 def recolor_endpoint():
@@ -65,6 +66,9 @@ def recolor_endpoint():
         return send_file(image_to_bytes(recolored), mimetype='image/png')
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
