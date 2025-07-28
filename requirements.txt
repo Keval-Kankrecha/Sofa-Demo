@@ -1,6 +1,6 @@
 Flask==2.3.3
 flask-cors==4.0.0
-rembg==2.0.50
+rembg==2.0.67
 numpy==1.26.4
 opencv-python==4.9.0.80
 Pillow==10.3.0
