@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 from PIL import Image
 from rembg import remove
-from flask import Flask, request, jsonify, send_file, render_template
+from flask import Flask, request, jsonify, send_file, render_template, render_template_string
 from flask_cors import CORS
 import io
 import os
@@ -50,6 +50,20 @@ def image_to_bytes(image_np):
     byte_io.seek(0)
     return byte_io
 
+
+@app.route('/', methods=['GET'])
+def index():
+    html_content = """
+    <!DOCTYPE html>
+    <html>
+    <head><title>Sofa Recolor API</title></head>
+    <body>
+        <h1>🛋️ Sofa Recolor API</h1>
+        <p>Welcome! Use the <code>/recolor</code> endpoint with POST requests to recolor sofa images.</p>
+    </body>
+    </html>
+    """
+    return render_template_string(html_content)
 
 @app.route('/recolor', methods=['POST'])
 def recolor_endpoint():
