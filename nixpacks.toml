@@ -1,6 +1,6 @@
 [phases.setup]
 nixpkgs = [
-  "mesa",     # ✅ Provides libGL.so.1
-  "glib",     # Needed for GUI/image dependencies
-  "opencv"    # Optional: Useful if using OpenCV in system context
+  "mesa",     
+  "glib",     
+  "opencv"    
 ]
