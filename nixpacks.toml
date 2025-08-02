@@ -1,6 +1,0 @@
-[phases.setup]
-nixpkgs = [
-  "mesa",     
-  "glib",     
-  "opencv"    
-]
