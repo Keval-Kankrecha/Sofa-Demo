@@ -15,7 +15,6 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.title("🛋️ Sofa Recolor Tool")
-st.markdown("### Recolor your sofa using AI! Upload or use the sample image and choose a new color.")
 
 # --- Load default image ---
 DEFAULT_IMAGE_URL = "https://i.ibb.co/8L5LX827/sofa-img.jpg"
